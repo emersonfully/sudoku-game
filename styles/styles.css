@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Potta+One&display=swap");
+
+:root {
+  /* font */
+  --font-family: "Potta One", cursive;
+  --font-size: 1.5rem;
+  --font-size-lg: 2rem;
+  --font-size-xl: 3rem;
+
+  /* colors */
+  --bg-body: #fff;
+  --color-text: #000;
+  --filled-color: #000;
+  --filled-bg: #caf0f8;
+
+  --white: #fff;
+  --blue: #00aeef;
+  --red: #e91e63;
+  --black: #000;
+
+  --nav-size: 70px;
+  --sudoku-cell-size: 50px;
+
+  --border-radius: 10px;
+
+  --space-y: 20px;
+
+  --gap: 5px;
+}
+
+.dark {
+  --bg-main: #2a2a38;
+  --bg-body: #1a1a2e;
+  --color-txt: #6a6a6a;
+  --filled-color: #4f4f63;
+  --filled-bg: #000;
+}
+
+* {
+}
