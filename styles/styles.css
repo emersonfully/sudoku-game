@@ -180,6 +180,10 @@ main {
   cursor: pointer;
 }
 
+.btn:hover {
+  filter: brightness(90%);
+}
+
 .btn-blue {
   background-color: var(--blue);
   color: var(--white);
