@@ -253,6 +253,70 @@ main {
   color: var(--white);
 }
 
+.main-game-info {
+  margin-top: var(--space-y);
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.main-game-info-box {
+  height: 45px;
+  background-color: var(--bg-main);
+  color: var(--color-txt);
+  border-radius: var(--border-radius);
+  display: grid;
+  place-items: center;
+  padding: 0 20px;
+  font-size: var(--font-size);
+}
+
+.main-game-info-time {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2rem;
+  margin-bottom: auto;
+}
+
+.pause-btn {
+  position: absolute;
+  right: 10px;
+  height: 30px;
+  width: 30px;
+  border-radius: var(--border-radius);
+  background-color: var(--blue);
+  color: var(--white);
+  font-size: var(--font-size);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.numbers {
+  margin-top: var(--space-y);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.number {
+  height: var(--sudoku-cell-size);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-main);
+  color: var(--color-txt);
+  display: grid;
+  place-items: center;
+  font-size: var(--font-size);
+  cursor: pointer;
+}
+
+.delete {
+  background-color: var(--red);
+  color: var(--white);
+}
+
 @keyframes bounce {
   0% {
     transform: translateX(0);
