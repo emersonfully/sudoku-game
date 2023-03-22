@@ -272,6 +272,10 @@ main {
   font-size: var(--font-size);
 }
 
+.main-game-info-box:hover {
+  border: 2px solid var(--blue);
+}
+
 .main-game-info-time {
   position: relative;
   align-items: center;
@@ -298,7 +302,7 @@ main {
   margin-top: var(--space-y);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
+  gap: 10px;
 }
 
 .number {
@@ -310,6 +314,10 @@ main {
   place-items: center;
   font-size: var(--font-size);
   cursor: pointer;
+}
+
+.number:hover {
+  border: 2px solid var(--blue);
 }
 
 .delete {

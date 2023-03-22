@@ -30,7 +30,7 @@
     <main>
         <div class="screen">
             <!-- Star Game screen -->
-            <div class="start-screen" id="start-screen">
+            <div class="start-screen active" id="start-screen">
                 <input type="text" class="input-name" id="input-name" placeholder="Your name. . ." maxlength="11">
                 <div class="btn" id="btn-level">
                     Easy
@@ -40,7 +40,7 @@
             </div>
 
             <!-- Game screen -->
-            <div class="main-game active">
+            <div class="main-game" id="game-screen">
                 <div class="main-sudoku-grid">
                     <!-- 81 cells -->
                     <div class="main-grid-cell"></div>
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="main-game-info-box main-game-info-time">
-                    <span id="game-time">10:20</span>
+                    <span id="game-time">00:00:00</span>
                     <div class="pause-btn" id="pause-btn">
                         <i class="bx bx-pause"></i>
                     </div>
@@ -154,6 +154,9 @@
                     <div class="number delete" id="delete-btn">X</div>
                 </div>
             </div>
+
+            <!-- Pause Screen -->
+
         </div>
     </main>
 

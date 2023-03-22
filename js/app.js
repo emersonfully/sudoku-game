@@ -9,14 +9,26 @@ document.querySelector('#dark-mode-toggle').addEventListener('click', () => {
 
 // Innitial Value
 
+
+// Screens
+const startScreen = document.querySelector('#start-screen');
+const gameScreen = document.querySelector('#game-screen')
+
+// ----------------------------------------------------------------------------------
 const cells = document.querySelectorAll('.main-grid-cell')
 
 const nameInput = document.querySelector('#input-name');
-const startScreen = document.querySelector('#star-screen');
+
+const playerName = document.querySelector('#player-name');
+const gameLevel = document.querySelector('#game-level');
+const gameTime = document.querySelector('#game-time')
 
 let level_index = 0;
 let level = CONSTANT.LEVEL[level_index]
 
+let timer = null
+let pause = false
+let seconds = 0
 // ----------------------------------------------------------------------------------
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
@@ -27,7 +39,7 @@ document.querySelector('#btn-level').addEventListener('click', (e) => {
 
 document.querySelector('#btn-play').addEventListener('click', () => {
     if (nameInput.value.trim().length > 0) {
-        alert(`level => ${level}`)
+        startGame()
     } else {
         nameInput.classList.add('input-err');
         setTimeout(() => {
@@ -54,6 +66,30 @@ const initGameGrid = () => {
     }
 }
 // ----------------------------------------------------------------------------------
+
+const setPlayerName = (name) => localStorage.setItem('playerName', name);
+const getPlayerName = () => localStorage.getItem('playerName');
+
+const showTime = (seconds) => new Date(seconds * 1000).toISOString().substr(11, 8)
+
+const startGame = () => {
+    startScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+
+    playerName.innerHTML = nameInput.value.trim();
+    setPlayerName(nameInput.value.trim())
+
+    gameLevel.innerHTML = CONSTANT.LEVEL_NAME[level_index];
+
+    seconds = 0
+
+    timer = setInterval(() => {
+        if (!pause) {
+            seconds = seconds + 1;
+            gameTime.innerHTML = showTime(seconds)
+        }
+    }, 1000);
+}
 
 const init = () => {
     const darkmode = JSON.parse(localStorage.getItem('darkmode'));
