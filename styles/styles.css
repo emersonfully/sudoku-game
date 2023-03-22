@@ -325,6 +325,40 @@ main {
   color: var(--white);
 }
 
+.pause-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-body);
+  align-items: center;
+  flex-direction: column;
+  display: none;
+  justify-content: center;
+}
+
+.pause-screen.active {
+  display: flex;
+}
+
+.pause-screen > * + * {
+  margin-top: 20px;
+}
+
+.pause-screen.active .btn {
+  animation: zoom-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes zoom-in {
+  0% {
+    transform: scale(3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes bounce {
   0% {
     transform: translateX(0);

@@ -12,7 +12,8 @@ document.querySelector('#dark-mode-toggle').addEventListener('click', () => {
 
 // Screens
 const startScreen = document.querySelector('#start-screen');
-const gameScreen = document.querySelector('#game-screen')
+const gameScreen = document.querySelector('#game-screen');
+const pauseScreen = document.querySelector('#pause-screen')
 
 // ----------------------------------------------------------------------------------
 const cells = document.querySelectorAll('.main-grid-cell')
@@ -47,6 +48,23 @@ document.querySelector('#btn-play').addEventListener('click', () => {
             nameInput.focus();
         }, 500);
     }
+});
+
+
+// pause the game
+document.querySelector('#pause-btn').addEventListener('click', () => {
+    pauseScreen.classList.add('active');
+    pause = true
+});
+
+// resume the game
+document.querySelector('#btn-resume').addEventListener('click', () => {
+    pauseScreen.classList.remove('active');
+    pause = false
+})
+
+document.querySelector('#btn-new-game').addEventListener('click', () => {
+    returnToStartScreen()
 })
 
 const getGameInfo = () => JSON.parse(localStorage.getItem('game'))
@@ -91,6 +109,15 @@ const startGame = () => {
     }, 1000);
 }
 
+const returnToStartScreen = () => {
+    clearInterval(timer);
+    pause = false;
+    seconds = 0;
+    startScreen.classList.add('active');
+    gameScreen.classList.remove('active');
+    pauseScreen.classList.remove('active')
+}
+
 const init = () => {
     const darkmode = JSON.parse(localStorage.getItem('darkmode'));
     document.body.classList.add(darkmode ? 'dark' : 'light');
@@ -102,6 +129,11 @@ const init = () => {
 
     initGameGrid()
 
+    if (getPlayerName()) {
+        nameInput.value = getPlayerName()
+    } else {
+        nameInput.focus()
+    }
 }
 
 init()
