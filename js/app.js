@@ -98,14 +98,14 @@ const clearSudoku = () => {
     for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
         cells[i].innerHTML = ''
         cells[i].classList.remove('filled');
-        cells[i].classList.remove('selected')
+        cells[i].classList.remove('selected');
     }
 }
 
 const initSudoku = () => {
     // clear the puzzle
     clearSudoku()
-
+    resetBg()
     // generate the sudoku puzzle
     su = sudokuGen(level)
     su_answer = [...su.question]
@@ -124,6 +124,65 @@ const initSudoku = () => {
             cells[i].innerHTML = su.question[row][col]
         }
     }
+}
+
+const hoverBg = (index) => {
+    let row = Math.floor(index / CONSTANT.GRID_SIZE);
+    let col = index % CONSTANT.GRID_SIZE;
+
+    let box_start_row = row - row % 3;
+    let box_start_col = col - col % 3;
+
+    for (let i = 0; i < CONSTANT.BOX_SIZE; i++) {
+        for (let j = 0; j < CONSTANT.BOX_SIZE; j++) {
+            let cell = cells[9 * (box_start_row + i) + (box_start_col + j)];
+            cell.classList.add('hover')
+        }
+    }
+
+    let step = 9;
+    while (index - step >= 0) {
+        cells[index - step].classList.add('hover');
+        step += 9;
+    }
+
+    step = 9;
+    while (index + step < 81) {
+        cells[index + step].classList.add('hover');
+        step += 9;
+    }
+
+    step = 1;
+    while (index - step >= 9 * row) {
+        cells[index - step].classList.add('hover');
+        step += 1;
+    }
+
+    step = 1;
+    while (index + step < 9 * row + 9) {
+        cells[index + step].classList.add('hover');
+        step += 1;
+    }
+}
+
+const resetBg = () => {
+    cells.forEach(e => e.classList.remove('hover'));
+}
+
+const initCellsEvent = () => {
+    cells.forEach((e, index) => {
+        e.addEventListener('click', () => {
+            if (!e.classList.contains('filled')) {
+                cells.forEach(e => e.classList.remove('selected'))
+
+                selected_cell = index
+                e.classList.remove('err')
+                e.classList.add('selected')
+                resetBg()
+                hoverBg(index)
+            }
+        })
+    })
 }
 
 const startGame = () => {
@@ -165,6 +224,7 @@ const init = () => {
     document.querySelector('#btn-continue').style.display = game ? 'grid' : 'nome';
 
     initGameGrid()
+    initCellsEvent()
 
     if (getPlayerName()) {
         nameInput.value = getPlayerName()
@@ -174,3 +234,5 @@ const init = () => {
 }
 
 init()
+
+// 1:33:00
