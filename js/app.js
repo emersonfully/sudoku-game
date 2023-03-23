@@ -30,6 +30,9 @@ let level = CONSTANT.LEVEL[level_index]
 let timer = null
 let pause = false
 let seconds = 0
+
+let su = undefined
+let su_answer = undefined
 // ----------------------------------------------------------------------------------
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
@@ -40,6 +43,7 @@ document.querySelector('#btn-level').addEventListener('click', (e) => {
 
 document.querySelector('#btn-play').addEventListener('click', () => {
     if (nameInput.value.trim().length > 0) {
+        initSudoku()
         startGame()
     } else {
         nameInput.classList.add('input-err');
@@ -88,7 +92,39 @@ const initGameGrid = () => {
 const setPlayerName = (name) => localStorage.setItem('playerName', name);
 const getPlayerName = () => localStorage.getItem('playerName');
 
-const showTime = (seconds) => new Date(seconds * 1000).toISOString().substr(11, 8)
+const showTime = (seconds) => new Date(seconds * 1000).toISOString().substr(11, 8);
+
+const clearSudoku = () => {
+    for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
+        cells[i].innerHTML = ''
+        cells[i].classList.remove('filled');
+        cells[i].classList.remove('selected')
+    }
+}
+
+const initSudoku = () => {
+    // clear the table
+    clearSudoku()
+
+    // generate the sudoku puzzle 
+    su = sudokuGen(level)
+    su_answer = [...su.question]
+
+    console.table(su_answer)
+
+    // show sudoku
+    for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
+        let row = Math.floor(i / CONSTANT.GRID_SIZE)
+        let col = i % CONSTANT.GRID_SIZE
+
+        cells[i].setAttribute('data-value', su.question[row][col])
+
+        if (su.question[row][col] !== 0) {
+            cells[i].classList.add('filled')
+            cells[i].innerHTML = su.question[row][col]
+        }
+    }
+}
 
 const startGame = () => {
     startScreen.classList.remove('active');
@@ -100,6 +136,7 @@ const startGame = () => {
     gameLevel.innerHTML = CONSTANT.LEVEL_NAME[level_index];
 
     seconds = 0
+    showTime(seconds);
 
     timer = setInterval(() => {
         if (!pause) {
