@@ -103,10 +103,10 @@ const clearSudoku = () => {
 }
 
 const initSudoku = () => {
-    // clear the table
+    // clear the puzzle
     clearSudoku()
 
-    // generate the sudoku puzzle 
+    // generate the sudoku puzzle
     su = sudokuGen(level)
     su_answer = [...su.question]
 
