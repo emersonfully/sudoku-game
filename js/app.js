@@ -16,9 +16,12 @@ const gameScreen = document.querySelector('#game-screen');
 const pauseScreen = document.querySelector('#pause-screen')
 
 // ----------------------------------------------------------------------------------
+
 const cells = document.querySelectorAll('.main-grid-cell')
 
 const nameInput = document.querySelector('#input-name');
+
+const numberInputs = document.querySelectorAll('.number')
 
 const playerName = document.querySelector('#player-name');
 const gameLevel = document.querySelector('#game-level');
@@ -33,6 +36,8 @@ let seconds = 0
 
 let su = undefined
 let su_answer = undefined
+
+let selected_cell = -1;
 // ----------------------------------------------------------------------------------
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
@@ -169,6 +174,92 @@ const resetBg = () => {
     cells.forEach(e => e.classList.remove('hover'));
 }
 
+const checkErr = (value) => {
+    const addErr = (cell) => {
+        if (parseInt(cell.getAttribute('data-value')) === value) {
+            cell.classList.add('err')
+            cell.classList.add('cell-err')
+
+            setTimeout(() => {
+                cell.classList.remove('cell-err')
+            }, 500);
+        }
+    }
+
+    let index = selected_cell
+
+    let row = Math.floor(index / CONSTANT.GRID_SIZE);
+    let col = index % CONSTANT.GRID_SIZE;
+
+    let box_start_row = row - row % 3;
+    let box_start_col = col - col % 3;
+
+    for (let i = 0; i < CONSTANT.BOX_SIZE; i++) {
+        for (let j = 0; j < CONSTANT.BOX_SIZE; j++) {
+            let cell = cells[9 * (box_start_row + i) + (box_start_col + j)];
+            if (!cell.classList.contains('selected')) addErr(cell)
+        }
+    }
+
+    let step = 9;
+    while (index - step >= 0) {
+        addErr(cells[index - step]);
+        step += 9;
+    }
+
+    step = 9;
+    while (index + step < 81) {
+        addErr(cells[index + step]);
+        step += 9;
+    }
+
+    step = 1;
+    while (index - step >= 9 * row) {
+        addErr(cells[index - step])
+        step += 1;
+    }
+
+    step = 1;
+    while (index + step < 9 * row + 9) {
+        addErr(cells[index + step]);
+        step += 1;
+    }
+}
+
+const removeErr = () => cells.forEach(e => e.classList.remove('err'))
+
+const initNumberInputEvent = () => {
+    numberInputs.forEach((e, index) => {
+        e.addEventListener('click', () => {
+            if (!cells[selected_cell].classList.contains('filled')) {
+                cells[selected_cell].innerHTML = index + 1
+                cells[selected_cell].setAttribute('data-value', index + 1)
+
+                // add to answer
+
+                let row = Math.floor(selected_cell / CONSTANT.GRID_SIZE)
+                let col = selected_cell % CONSTANT.GRID_SIZE
+                su_answer[row][col] = index + 1
+
+                // save game
+
+                // ------------------------------------------------
+
+                removeErr()
+                checkErr(index + 1)
+                cells[selected_cell].classList.add('zoom-in')
+                setTimeout(() => {
+                    cells[selected_cell].classList.remove('zoom-in')
+                }, 500);
+
+                // check game win
+
+                // -----------------------------------------------
+            }
+        })
+    })
+}
+
 const initCellsEvent = () => {
     cells.forEach((e, index) => {
         e.addEventListener('click', () => {
@@ -225,6 +316,8 @@ const init = () => {
 
     initGameGrid()
     initCellsEvent()
+    initNumberInputEvent()
+
 
     if (getPlayerName()) {
         nameInput.value = getPlayerName()
