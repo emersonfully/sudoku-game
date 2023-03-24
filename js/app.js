@@ -76,6 +76,18 @@ document.querySelector('#btn-new-game').addEventListener('click', () => {
     returnToStartScreen()
 })
 
+document.querySelector('#delete-btn').addEventListener('click', () => {
+    cells[selected_cell].innerHTML = ''
+    cells[selected_cell].setAttribute('data-value', 0)
+
+    let row = Math.floor(selected_cell / CONSTANT.GRID_SIZE)
+    let col = selected_cell % CONSTANT.GRID_SIZE
+
+    su_answer[row][col] = 0
+
+    removeErr()
+})
+
 const getGameInfo = () => JSON.parse(localStorage.getItem('game'))
 
 // add spaces for each 9 cells
@@ -228,6 +240,32 @@ const checkErr = (value) => {
 
 const removeErr = () => cells.forEach(e => e.classList.remove('err'))
 
+const saveGameInfo = () => {
+    let game = {
+        level: level_index,
+        seconds: seconds,
+        su: {
+            original: su.original,
+            question: su.question,
+            answer: su_answer
+        }
+    }
+    localStorage.setItem('game', JSON.stringify(game))
+}
+
+const removeGameInfo = () => {
+    localStorage.removeItem('game')
+    document.querySelector('#btn-continue').style.display = 'none'
+}
+
+const isGameWin = () => sudokuCheck(su_answer)
+
+const showResult = () => {
+    clearInterval(timer)
+    alert('win')
+    // show result screen
+}
+
 const initNumberInputEvent = () => {
     numberInputs.forEach((e, index) => {
         e.addEventListener('click', () => {
@@ -242,7 +280,7 @@ const initNumberInputEvent = () => {
                 su_answer[row][col] = index + 1
 
                 // save game
-
+                saveGameInfo()
                 // ------------------------------------------------
 
                 removeErr()
@@ -253,7 +291,10 @@ const initNumberInputEvent = () => {
                 }, 500);
 
                 // check game win
-
+                if (isGameWin()) {
+                    removeGameInfo()
+                    showRE
+                }
                 // -----------------------------------------------
             }
         })
