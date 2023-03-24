@@ -15,7 +15,6 @@ const startScreen = document.querySelector('#start-screen');
 const gameScreen = document.querySelector('#game-screen');
 const pauseScreen = document.querySelector('#pause-screen')
 const resultScreen = document.querySelector('#result-screen')
-
 // ----------------------------------------------------------------------------------
 
 const cells = document.querySelectorAll('.main-grid-cell')
@@ -28,25 +27,25 @@ const playerName = document.querySelector('#player-name');
 const gameLevel = document.querySelector('#game-level');
 const gameTime = document.querySelector('#game-time')
 
-const result_time = document.querySelector('#result-time')
+const resultTime = document.querySelector('#result-time')
 
-let level_index = 0;
-let level = CONSTANT.LEVEL[level_index]
+let levelIndex = 0;
+let level = CONSTANT.LEVEL[levelIndex]
 
 let timer = null
 let pause = false
 let seconds = 0
 
 let su = undefined
-let su_answer = undefined
+let suAnswer = undefined
 
-let selected_cell = -1;
+let selectedCell = -1;
 // ----------------------------------------------------------------------------------
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
-    level_index = level_index + 1 > CONSTANT.LEVEL.length - 1 ? 0 : level_index + 1;
-    level = CONSTANT.LEVEL[level_index];
-    e.target.innerHTML = CONSTANT.LEVEL_NAME[level_index]
+    levelIndex = levelIndex + 1 > CONSTANT.LEVEL.length - 1 ? 0 : levelIndex + 1;
+    level = CONSTANT.LEVEL[levelIndex];
+    e.target.innerHTML = CONSTANT.LEVEL_NAME[levelIndex]
 })
 
 document.querySelector('#btn-play').addEventListener('click', () => {
@@ -96,13 +95,13 @@ document.querySelector('#btn-new-game-2').addEventListener('click', () => {
 })
 
 document.querySelector('#delete-btn').addEventListener('click', () => {
-    cells[selected_cell].innerHTML = ''
-    cells[selected_cell].setAttribute('data-value', 0)
+    cells[selectedCell].innerHTML = ''
+    cells[selectedCell].setAttribute('data-value', 0)
 
-    let row = Math.floor(selected_cell / CONSTANT.GRID_SIZE)
-    let col = selected_cell % CONSTANT.GRID_SIZE
+    let row = Math.floor(selectedCell / CONSTANT.GRID_SIZE)
+    let col = selectedCell % CONSTANT.GRID_SIZE
 
-    su_answer[row][col] = 0
+    suAnswer[row][col] = 0
 
     removeErr()
 })
@@ -144,12 +143,12 @@ const initSudoku = () => {
     resetBg()
     // generate the sudoku puzzle
     su = sudokuGen(level)
-    su_answer = [...su.question]
+    suAnswer = [...su.question]
 
     seconds = 0
 
     saveGameInfo()
-    console.table(su_answer)
+    console.table(suAnswer)
 
     // show sudoku
     for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
@@ -172,19 +171,19 @@ const loadSudoku = () => {
 
     su = game.su
 
-    su_answer = su.answer
+    suAnswer = su.answer
 
     seconds = game.seconds
     gameTime.innerHTML = showTime(seconds)
 
-    level_index = game.level
+    levelIndex = game.level
 
     for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
         let row = Math.floor(i / CONSTANT.GRID_SIZE)
         let col = i % CONSTANT.GRID_SIZE
 
-        cells[i].setAttribute('data-value', su_answer[row][col])
-        cells[i].innerHTML = su_answer[row][col] !== 0 ? su_answer[row][col] : ''
+        cells[i].setAttribute('data-value', suAnswer[row][col])
+        cells[i].innerHTML = suAnswer[row][col] !== 0 ? suAnswer[row][col] : ''
 
         if (su.question[row][col] !== 0) {
             cells[i].classList.add('filled')
@@ -196,12 +195,12 @@ const hoverBg = (index) => {
     let row = Math.floor(index / CONSTANT.GRID_SIZE);
     let col = index % CONSTANT.GRID_SIZE;
 
-    let box_start_row = row - row % 3;
-    let box_start_col = col - col % 3;
+    let boxStartRow = row - row % 3;
+    let boxStartCol = col - col % 3;
 
     for (let i = 0; i < CONSTANT.BOX_SIZE; i++) {
         for (let j = 0; j < CONSTANT.BOX_SIZE; j++) {
-            let cell = cells[9 * (box_start_row + i) + (box_start_col + j)];
+            let cell = cells[9 * (boxStartRow + i) + (boxStartCol + j)];
             cell.classList.add('hover')
         }
     }
@@ -247,17 +246,17 @@ const checkErr = (value) => {
         }
     }
 
-    let index = selected_cell
+    let index = selectedCell
 
     let row = Math.floor(index / CONSTANT.GRID_SIZE);
     let col = index % CONSTANT.GRID_SIZE;
 
-    let box_start_row = row - row % 3;
-    let box_start_col = col - col % 3;
+    let boxStartRow = row - row % 3;
+    let boxStartCol = col - col % 3;
 
     for (let i = 0; i < CONSTANT.BOX_SIZE; i++) {
         for (let j = 0; j < CONSTANT.BOX_SIZE; j++) {
-            let cell = cells[9 * (box_start_row + i) + (box_start_col + j)];
+            let cell = cells[9 * (boxStartRow + i) + (boxStartCol + j)];
             if (!cell.classList.contains('selected')) addErr(cell)
         }
     }
@@ -291,12 +290,12 @@ const removeErr = () => cells.forEach(e => e.classList.remove('err'))
 
 const saveGameInfo = () => {
     let game = {
-        level: level_index,
+        level: levelIndex,
         seconds: seconds,
         su: {
             original: su.original,
             question: su.question,
-            answer: su_answer
+            answer: suAnswer
         }
     }
     localStorage.setItem('game', JSON.stringify(game))
@@ -307,27 +306,27 @@ const removeGameInfo = () => {
     document.querySelector('#btn-continue').style.display = 'none'
 }
 
-const isGameWin = () => sudokuCheck(su_answer)
+const isGameWin = () => sudokuCheck(suAnswer)
 
 const showResult = () => {
     clearInterval(timer)
     resultScreen.classList.add('active')
-    result_time.innerHTML = showTime(seconds)
+    resultTime.innerHTML = showTime(seconds)
     // show result screen
 }
 
 const initNumberInputEvent = () => {
     numberInputs.forEach((e, index) => {
         e.addEventListener('click', () => {
-            if (!cells[selected_cell].classList.contains('filled')) {
-                cells[selected_cell].innerHTML = index + 1
-                cells[selected_cell].setAttribute('data-value', index + 1)
+            if (!cells[selectedCell].classList.contains('filled')) {
+                cells[selectedCell].innerHTML = index + 1
+                cells[selectedCell].setAttribute('data-value', index + 1)
 
                 // add to answer
 
-                let row = Math.floor(selected_cell / CONSTANT.GRID_SIZE)
-                let col = selected_cell % CONSTANT.GRID_SIZE
-                su_answer[row][col] = index + 1
+                let row = Math.floor(selectedCell / CONSTANT.GRID_SIZE)
+                let col = selectedCell % CONSTANT.GRID_SIZE
+                suAnswer[row][col] = index + 1
 
                 // save game
                 saveGameInfo()
@@ -335,15 +334,15 @@ const initNumberInputEvent = () => {
 
                 removeErr()
                 checkErr(index + 1)
-                cells[selected_cell].classList.add('zoom-in')
+                cells[selectedCell].classList.add('zoom-in')
                 setTimeout(() => {
-                    cells[selected_cell].classList.remove('zoom-in')
+                    cells[selectedCell].classList.remove('zoom-in')
                 }, 500);
 
                 // check game win
                 if (isGameWin()) {
                     removeGameInfo()
-                    showRE
+                    showResult()
                 }
                 // -----------------------------------------------
             }
@@ -357,7 +356,7 @@ const initCellsEvent = () => {
             if (!e.classList.contains('filled')) {
                 cells.forEach(e => e.classList.remove('selected'))
 
-                selected_cell = index
+                selectedCell = index
                 e.classList.remove('err')
                 e.classList.add('selected')
                 resetBg()
@@ -374,7 +373,7 @@ const startGame = () => {
     playerName.innerHTML = nameInput.value.trim();
     setPlayerName(nameInput.value.trim())
 
-    gameLevel.innerHTML = CONSTANT.LEVEL_NAME[level_index];
+    gameLevel.innerHTML = CONSTANT.LEVEL_NAME[levelIndex];
 
     seconds = 0
     showTime(seconds);
