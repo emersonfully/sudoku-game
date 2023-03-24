@@ -331,7 +331,8 @@ main {
   cursor: pointer;
 }
 
-.pause-screen {
+.pause-screen,
+.result-screen {
   position: absolute;
   top: 0;
   left: 0;
@@ -344,12 +345,33 @@ main {
   justify-content: center;
 }
 
-.pause-screen.active {
+.pause-screen.active,
+.result-screen.active {
   display: flex;
 }
 
-.pause-screen > * + * {
+.pause-screen > * + *,
+.result-screen > * + * {
   margin-top: 20px;
+}
+
+.result-screen.active div {
+  animation: zoom-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-screen .congratz {
+  font-size: var(--font-size-xl);
+  color: var(--blue);
+}
+
+.result-screen .info {
+  color: var(--color-txt);
+  font-size: var(--font-size);
+}
+
+#result-time {
+  color: var(--blue);
+  font-size: var(--font-size-xl);
 }
 
 .pause-screen.active .btn {

@@ -14,6 +14,7 @@ document.querySelector('#dark-mode-toggle').addEventListener('click', () => {
 const startScreen = document.querySelector('#start-screen');
 const gameScreen = document.querySelector('#game-screen');
 const pauseScreen = document.querySelector('#pause-screen')
+const resultScreen = document.querySelector('#result-screen')
 
 // ----------------------------------------------------------------------------------
 
@@ -26,6 +27,8 @@ const numberInputs = document.querySelectorAll('.number')
 const playerName = document.querySelector('#player-name');
 const gameLevel = document.querySelector('#game-level');
 const gameTime = document.querySelector('#game-time')
+
+const result_time = document.querySelector('#result-time')
 
 let level_index = 0;
 let level = CONSTANT.LEVEL[level_index]
@@ -59,6 +62,19 @@ document.querySelector('#btn-play').addEventListener('click', () => {
     }
 });
 
+document.querySelector('#btn-continue').addEventListener('click', () => {
+    if (nameInput.value.trim().length > 0) {
+        loadSudoku()
+        startGame()
+    } else {
+        nameInput.classList.add('input-err');
+        setTimeout(() => {
+            nameInput.classList.remove('input-err');
+            nameInput.focus();
+        }, 500);
+    }
+});
+
 
 // pause the game
 document.querySelector('#pause-btn').addEventListener('click', () => {
@@ -73,6 +89,9 @@ document.querySelector('#btn-resume').addEventListener('click', () => {
 })
 
 document.querySelector('#btn-new-game').addEventListener('click', () => {
+    returnToStartScreen()
+})
+document.querySelector('#btn-new-game-2').addEventListener('click', () => {
     returnToStartScreen()
 })
 
@@ -127,6 +146,9 @@ const initSudoku = () => {
     su = sudokuGen(level)
     su_answer = [...su.question]
 
+    seconds = 0
+
+    saveGameInfo()
     console.table(su_answer)
 
     // show sudoku
@@ -139,6 +161,33 @@ const initSudoku = () => {
         if (su.question[row][col] !== 0) {
             cells[i].classList.add('filled')
             cells[i].innerHTML = su.question[row][col]
+        }
+    }
+}
+
+const loadSudoku = () => {
+    let game = getGameInfo()
+
+    gameLevel.innerHTML = CONSTANT.LEVEL_NAME[game.level]
+
+    su = game.su
+
+    su_answer = su.answer
+
+    seconds = game.seconds
+    gameTime.innerHTML = showTime(seconds)
+
+    level_index = game.level
+
+    for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
+        let row = Math.floor(i / CONSTANT.GRID_SIZE)
+        let col = i % CONSTANT.GRID_SIZE
+
+        cells[i].setAttribute('data-value', su_answer[row][col])
+        cells[i].innerHTML = su_answer[row][col] !== 0 ? su_answer[row][col] : ''
+
+        if (su.question[row][col] !== 0) {
+            cells[i].classList.add('filled')
         }
     }
 }
@@ -262,7 +311,8 @@ const isGameWin = () => sudokuCheck(su_answer)
 
 const showResult = () => {
     clearInterval(timer)
-    alert('win')
+    resultScreen.classList.add('active')
+    result_time.innerHTML = showTime(seconds)
     // show result screen
 }
 
@@ -344,6 +394,7 @@ const returnToStartScreen = () => {
     startScreen.classList.add('active');
     gameScreen.classList.remove('active');
     pauseScreen.classList.remove('active')
+    resultScreen.classList.remove('active')
 }
 
 const init = () => {
@@ -368,5 +419,3 @@ const init = () => {
 }
 
 init()
-
-// 1:33:00
